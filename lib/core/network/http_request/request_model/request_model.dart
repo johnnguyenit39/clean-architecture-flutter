@@ -13,7 +13,8 @@ class RequestModel {
   final RequestMethod requestMethod;
   final RequestType requestType;
   String route;
-  final String? params;
+  final String? body;
+  final Map<String, dynamic>? queryParams;
   Map<String, dynamic>? grapqlVariables;
 
   RequestModel({
@@ -21,6 +22,7 @@ class RequestModel {
     required this.requestType,
     required this.requestMethod,
     this.grapqlVariables,
-    this.params,
+    this.queryParams,
+    this.body,
   });
 }

@@ -80,16 +80,17 @@ class ApiService {
     var response = await dio.get(
       url,
       options: await _baseOptions(),
+      queryParameters: request.queryParams,
     );
 
     return response.data;
   }
 
   Future<Map<String, dynamic>> _requestPost(RequestModel request) async {
-    final url = '${AppConfig.baseUrl}${request.route}';
+    final url = '${AppConfig.baseUrl}${request.route}${request.queryParams}';
     var response = await dio.post(
       url,
-      data: request.params,
+      data: request.body,
       options: await _baseOptions(),
     );
 
@@ -97,10 +98,10 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> _requestPut(RequestModel request) async {
-    final url = '${AppConfig.baseUrl}${request.route}';
+    final url = '${AppConfig.baseUrl}${request.route}${request.queryParams}';
     var response = await dio.put(
       url,
-      data: request.params,
+      data: request.body,
       options: await _baseOptions(),
     );
 
