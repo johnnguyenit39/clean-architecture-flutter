@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:getjoke/common/ui_components/index.dart';
 import 'package:getjoke/features/home/cubit/home_cubit.dart';
@@ -13,6 +14,7 @@ class JokeSubmitForm extends StatefulWidget {
 
 class _JokeSubmitFormState extends State<JokeSubmitForm> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+
   late HomeCubit _homeCubit;
 
   @override
@@ -45,19 +47,49 @@ class _JokeSubmitFormState extends State<JokeSubmitForm> {
               decoration:
                   const InputDecoration(labelText: 'Language (Optional)'),
             ),
-            FormBuilderDropdown(
-              name: 'Category',
-              onChanged: (value) {
-                _homeCubit.updateJokeForm(category: value);
+            BlocBuilder<HomeCubit, HomeState>(
+              buildWhen: (previous, current) =>
+                  previous.selectedCustom != current.selectedCustom,
+              builder: (context, state) {
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        const CText(
+                          text: 'Custom Category:',
+                        ),
+                        Checkbox(
+                          value: state.selectedCustom,
+                          onChanged: (newValue) {
+                            _homeCubit.updateJokeForm(
+                                selectedCustom: newValue, categories: []);
+                          },
+                        ),
+                      ],
+                    ),
+                    if (state.selectedCustom == true) ...[
+                      FormBuilderCheckboxGroup(
+                        autovalidateMode: AutovalidateMode.always,
+                        name: 'flags',
+                        options: categories,
+                        validator: (value) {
+                          if (state.selectedCustom == true && value == null ||
+                              value!.isEmpty) {
+                            return 'You must select at least one Category';
+                          }
+                          return null;
+                        },
+                        onChanged: (list) {
+                          _homeCubit.updateJokeForm(
+                              categories: list?.map((e) => '$e').toList());
+                        },
+                        decoration: const InputDecoration(
+                            labelText: 'Categories  (Optional)'),
+                      ),
+                    ]
+                  ],
+                );
               },
-              items: categories
-                  .map((category) => DropdownMenuItem(
-                        value: category,
-                        child: Text(category),
-                      ))
-                  .toList(),
-              decoration:
-                  const InputDecoration(labelText: 'Joke Category (Optional)'),
             ),
             FormBuilderCheckboxGroup(
               name: 'flags',

@@ -1,13 +1,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:getjoke/core/enum/enum.dart';
 import 'package:getjoke/core/routes/router_table.dart';
 import 'package:getjoke/features/home/domain/use_cases/submit_form_interactor.dart';
+import 'package:getjoke/mixin/dialog_mixin.dart';
 
 part 'home_state.dart';
 
-class HomeCubit extends Cubit<HomeState> {
+class HomeCubit extends Cubit<HomeState> with DialogsMixin {
   HomeCubit() : super(const HomeState());
   static HomeCubit blocFromContext({BuildContext? context}) {
     if (context != null) {
@@ -22,21 +24,32 @@ class HomeCubit extends Cubit<HomeState> {
   final _submitFormInteractor = SubmitFormInteractor();
 
   void submitJokeForm() async {
+    EasyLoading.show(status: 'loading...');
     emit(state.copyWith(onSubmitJoke: LoadStatus.loading));
-    await _submitFormInteractor.execute(generateQueryParams());
-    emit(state.copyWith(onSubmitJoke: LoadStatus.success));
+    final response = await _submitFormInteractor.execute(generateQueryParams());
+    showAlertDialog(
+      content: response?.joke != null
+          ? response?.joke.toString()
+          : 'Setup: ${response?.setup} - Delivery: ${response?.delivery}',
+    );
+    EasyLoading.dismiss();
+    emit(state.copyWith(
+        onSubmitJoke:
+            response?.error == true ? LoadStatus.failure : LoadStatus.success));
   }
 
   void updateJokeForm(
       {String? language,
-      String? category,
+      List<String>? categories,
       List<String>? blackList,
+      bool? selectedCustom,
       String? searchText}) {
     emit(state.copyWith(
       selectedLanguage: language,
-      selectedCategory: category,
+      selectedCategoryList: categories,
       selectedBlackList: blackList,
       searchKeyword: searchController.text,
+      selectedCustom: selectedCustom,
     ));
   }
 
@@ -45,12 +58,18 @@ class HomeCubit extends Cubit<HomeState> {
     if (state.selectedLanguage != null) {
       queryParams.addAll({'lang': state.selectedLanguage});
     }
-    if (state.selectedCategory != null) {
-      // path = '$path${state.selectedLanguage}';
+    if (state.selectedCategoryList != null && state.selectedCustom == true) {
+      final categories = state.selectedCategoryList?.join(',');
+      queryParams.addAll({'categories': categories});
     }
-    if (state.selectedBlackList != null) {}
+    if (state.selectedBlackList != null) {
+      final blackList = state.selectedBlackList?.join(',');
+      queryParams.addAll({'blacklistFlags': blackList});
+    }
 
-    if (searchController.text.isNotEmpty) {}
+    if (searchController.text.isNotEmpty) {
+      queryParams.addAll({'contains': searchController.text});
+    }
 
     return queryParams;
   }

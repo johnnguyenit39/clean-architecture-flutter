@@ -2,16 +2,17 @@ part of 'home_cubit.dart';
 
 class HomeState extends Equatable {
   final LoadStatus? onSubmitJoke;
+  final bool? selectedCustom;
   final String? selectedLanguage;
-  final String? selectedCategory;
-
+  final List<String>? selectedCategoryList;
   final List<String>? selectedBlackList;
   final String? searchKeyword;
 
   const HomeState({
+    this.selectedCustom = false,
     this.onSubmitJoke = LoadStatus.initial,
     this.selectedLanguage,
-    this.selectedCategory,
+    this.selectedCategoryList,
     this.selectedBlackList,
     this.searchKeyword,
   });
@@ -19,7 +20,8 @@ class HomeState extends Equatable {
   HomeState copyWith({
     LoadStatus? onSubmitJoke,
     String? selectedLanguage,
-    String? selectedCategory,
+    bool? selectedCustom,
+    List<String>? selectedCategoryList,
     List<String>? selectedBlackList,
     String? searchKeyword,
   }) {
@@ -27,8 +29,9 @@ class HomeState extends Equatable {
       onSubmitJoke: onSubmitJoke ?? this.onSubmitJoke,
       selectedLanguage: selectedLanguage ?? this.selectedLanguage,
       selectedBlackList: selectedBlackList ?? this.selectedBlackList,
-      selectedCategory: selectedCategory ?? this.selectedCategory,
+      selectedCategoryList: selectedCategoryList ?? this.selectedCategoryList,
       searchKeyword: searchKeyword ?? this.searchKeyword,
+      selectedCustom: selectedCustom ?? this.selectedCustom,
     );
   }
 
@@ -37,7 +40,8 @@ class HomeState extends Equatable {
         onSubmitJoke,
         selectedLanguage,
         selectedBlackList,
-        selectedCategory,
-        searchKeyword
+        selectedCategoryList,
+        searchKeyword,
+        selectedCustom,
       ];
 }

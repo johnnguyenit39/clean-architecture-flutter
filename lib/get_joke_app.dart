@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'core/routes/router_table.dart';
 
@@ -18,6 +19,7 @@ class GetJokeApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'GetJoke Mobile',
         routerConfig: routerConfig,
+        builder: EasyLoading.init(),
         theme: ThemeData(
           useMaterial3: true,
           // colorScheme: lightColorScheme,

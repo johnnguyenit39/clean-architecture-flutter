@@ -7,9 +7,13 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: SafeArea(
-        child: JokeSubmitForm(),
+        child: SingleChildScrollView(
+            child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: const JokeSubmitForm(),
+        )),
       ),
     );
   }
