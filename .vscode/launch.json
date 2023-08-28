@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "getjoke (Debug)",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--flavor",
+                "dev"
+            ],
+            "program": "lib/main_dev.dart",
+        },
+        {
+            "name": "getjoke (Production)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "args": [
+                "--flavor",
+                "production"
+            ],
+            "program": "lib/main_production.dart",
+        },
+    ]
+}
