@@ -15,7 +15,7 @@ final GoRouter routerConfig = GoRouter(
     GoRoute(
       parentNavigatorKey: rootNavigatorKey,
       path: HomePage.routeName,
-      builder: ((context, state) => HomePage()),
+      builder: ((context, state) => const HomePage()),
     ),
     // GoRoute(
     //   parentNavigatorKey: rootNavigatorKey,

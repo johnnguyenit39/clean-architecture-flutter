@@ -7,7 +7,7 @@ class SubmitFormInteractor {
 
   final _repository = GetIt.instance<HomeRepository>();
 
-  Future<JokeResponse?> execute(Map<String, dynamic>? queryParams) async {
+  Future<JokeResponse?> execute({Map<String, dynamic>? queryParams}) async {
     try {
       return await _repository.getJoke(queryParams);
     } catch (e) {

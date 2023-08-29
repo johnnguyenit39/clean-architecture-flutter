@@ -1,8 +1,6 @@
 import 'package:getjoke/core/env/app_env.dart';
 import 'package:getjoke/core/network/http_request/interceptors/interceptors.dart';
 import 'package:getjoke/core/network/http_request/request_model/request_model.dart';
-import 'package:getjoke/core/network/http_request/request_model/request_status_code.dart';
-import 'package:getjoke/core/network/http_request/response_models/base_request_response.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
