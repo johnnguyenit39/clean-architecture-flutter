@@ -23,12 +23,16 @@ class HomeCubit extends Cubit<HomeState> with DialogsMixin {
 
   final _submitFormInteractor = SubmitFormInteractor();
 
+  void init() {
+    emit(state.copyWith(selectedCustom: true));
+  }
+
   void submitJokeForm() async {
     EasyLoading.show(status: 'loading...');
     emit(state.copyWith(onSubmitJoke: LoadStatus.loading));
     final response = await _submitFormInteractor.execute(generateQueryParams());
     showAlertDialog(
-      content: response?.joke != null
+      content: response?.joke != null && response?.joke != ''
           ? response?.joke.toString()
           : 'Setup: ${response?.setup} - Delivery: ${response?.delivery}',
     );

@@ -9,7 +9,7 @@ class HomeState extends Equatable {
   final String? searchKeyword;
 
   const HomeState({
-    this.selectedCustom = false,
+    this.selectedCustom = true,
     this.onSubmitJoke = LoadStatus.initial,
     this.selectedLanguage,
     this.selectedCategoryList,

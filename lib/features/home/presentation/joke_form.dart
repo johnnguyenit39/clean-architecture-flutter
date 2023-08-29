@@ -14,7 +14,8 @@ class JokeSubmitForm extends StatefulWidget {
 
 class _JokeSubmitFormState extends State<JokeSubmitForm> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
-
+  final GlobalKey<FormBuilderState> _categoryFormKey =
+      GlobalKey<FormBuilderState>();
   late HomeCubit _homeCubit;
 
   @override
@@ -32,6 +33,7 @@ class _JokeSubmitFormState extends State<JokeSubmitForm> {
         child: Column(
           children: [
             FormBuilderDropdown(
+              initialValue: 'en',
               onChanged: (value) {
                 _homeCubit.updateJokeForm(language: value);
               },
@@ -61,6 +63,7 @@ class _JokeSubmitFormState extends State<JokeSubmitForm> {
                         Checkbox(
                           value: state.selectedCustom,
                           onChanged: (newValue) {
+                            _categoryFormKey.currentState?.reset();
                             _homeCubit.updateJokeForm(
                                 selectedCustom: newValue, categories: []);
                           },
@@ -68,23 +71,26 @@ class _JokeSubmitFormState extends State<JokeSubmitForm> {
                       ],
                     ),
                     if (state.selectedCustom == true) ...[
-                      FormBuilderCheckboxGroup(
-                        autovalidateMode: AutovalidateMode.always,
-                        name: 'flags',
-                        options: categories,
-                        validator: (value) {
-                          if (state.selectedCustom == true && value == null ||
-                              value!.isEmpty) {
-                            return 'You must select at least one Category';
-                          }
-                          return null;
-                        },
-                        onChanged: (list) {
-                          _homeCubit.updateJokeForm(
-                              categories: list?.map((e) => '$e').toList());
-                        },
-                        decoration: const InputDecoration(
-                            labelText: 'Categories  (Optional)'),
+                      FormBuilder(
+                        key: _categoryFormKey,
+                        child: FormBuilderCheckboxGroup(
+                          autovalidateMode: AutovalidateMode.always,
+                          name: 'flags',
+                          options: categories,
+                          validator: (value) {
+                            if (state.selectedCustom == true && value == null ||
+                                value!.isEmpty) {
+                              return 'You must select at least one Category';
+                            }
+                            return null;
+                          },
+                          onChanged: (list) {
+                            _homeCubit.updateJokeForm(
+                                categories: list?.map((e) => '$e').toList());
+                          },
+                          decoration: const InputDecoration(
+                              labelText: 'Categories  (Optional)'),
+                        ),
                       ),
                     ]
                   ],
@@ -101,36 +107,10 @@ class _JokeSubmitFormState extends State<JokeSubmitForm> {
               decoration: const InputDecoration(
                   labelText: 'Blacklist Flags (Optional)'),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Column(
-                children: [
-                  Row(
-                    children: const [
-                      CText(
-                        text: 'Response Format:',
-                      ),
-                      CText(
-                        text: 'Json',
-                        fontWeight: FontWeight.bold,
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: const [
-                      CText(
-                        text: 'Joke Type:',
-                      ),
-                      CText(
-                        text: 'Single',
-                        fontWeight: FontWeight.bold,
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            const SizedBox(height: 12),
+            rowTitle(title: 'Response Format:', content: 'Json'),
+            rowTitle(title: 'Joke Type:', content: 'Single'),
+            rowTitle(title: 'Amount of joke:', content: '1'),
             FormBuilderTextField(
               controller:
                   HomeCubit.blocFromContext(context: context).searchController,
@@ -141,7 +121,7 @@ class _JokeSubmitFormState extends State<JokeSubmitForm> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                if (_formKey.currentState!.validate()) {
+                if (isValidated()) {
                   HomeCubit.blocFromContext(context: context).submitJokeForm();
                 }
               },
@@ -151,5 +131,34 @@ class _JokeSubmitFormState extends State<JokeSubmitForm> {
         ),
       ),
     );
+  }
+
+  Widget rowTitle({String? title, String? content}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          CText(
+            text: '$title',
+          ),
+          CText(
+            text: '$content',
+            fontWeight: FontWeight.bold,
+          )
+        ],
+      ),
+    );
+  }
+
+  bool isValidated() {
+    if (_homeCubit.state.selectedCustom == true &&
+        _categoryFormKey.currentState != null &&
+        _categoryFormKey.currentState!.validate()) {
+      return true;
+    }
+    if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+      return true;
+    }
+    return false;
   }
 }

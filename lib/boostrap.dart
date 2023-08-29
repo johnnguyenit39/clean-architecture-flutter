@@ -28,7 +28,7 @@ void bootstrap() async {
       runApp(MultiBlocProvider(
         providers: [
           BlocProvider<HomeCubit>(
-            create: (context) => HomeCubit(),
+            create: (context) => HomeCubit()..init(),
           ),
         ],
         child: const GetJokeApp(),

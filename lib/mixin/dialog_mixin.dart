@@ -18,10 +18,15 @@ mixin DialogsMixin {
         transitionDuration: const Duration(milliseconds: 300),
         context: _dialogContext,
         pageBuilder: (_, __, ___) {
+          double textHeight = 48;
+          if (content != null) {
+            textHeight = 12.0 * content.split(' ').length;
+          }
           return Align(
             alignment: Alignment.center,
             child: IntrinsicHeight(
               child: Container(
+                height: textHeight,
                 width: 350,
                 decoration: BoxDecoration(
                   color: Colors.white,

@@ -9,6 +9,7 @@ class HomeDataSourceImpl implements HomeDataSoucre {
     String path = '';
     if (queryParams?['categories'] != null) {
       path = queryParams?['categories'];
+      queryParams?.removeWhere((key, value) => value == 'categories');
     }
 
     final res = await ApiService().request(SubmitJokeRequest(
