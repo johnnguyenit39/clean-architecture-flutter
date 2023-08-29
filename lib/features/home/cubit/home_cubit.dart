@@ -14,8 +14,10 @@ class HomeCubit extends Cubit<HomeState> with DialogsMixin {
   static HomeCubit blocFromContext({BuildContext? context}) {
     if (context != null) {
       return BlocProvider.of<HomeCubit>(context);
-    } else {
+    } else if (rootNavigatorKey.currentContext != null) {
       return BlocProvider.of<HomeCubit>(rootNavigatorKey.currentContext!);
+    } else {
+      return HomeCubit();
     }
   }
 

@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
             child: SizedBox(
-          height: MediaQuery.of(context).size.height,
+          height: 600,
           child: const JokeSubmitForm(),
         )),
       ),

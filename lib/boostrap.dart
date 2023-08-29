@@ -10,7 +10,7 @@ import 'package:getjoke/core/network/http_request/api_service/api_service.dart';
 import 'package:getjoke/features/home/cubit/home_cubit.dart';
 import 'package:getjoke/get_joke_app.dart';
 
-void bootstrap() async {
+Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   //To handle http request for old android models
